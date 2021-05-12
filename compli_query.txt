@@ -1,0 +1,41 @@
+SELECT        u.id, u.firstname + ' ' + u.lastname AS fullname,
+                             (SELECT        data
+                               FROM            dbo.mdl232x0_user_info_data
+                               WHERE        (userid = u.id) AND (fieldid = 1)) AS ngaysinh,
+                             (SELECT        data
+                               FROM            dbo.mdl232x0_user_info_data
+                               WHERE        (userid = u.id) AND (fieldid = 2)) AS thangsinh,
+                             (SELECT        data
+                               FROM            dbo.mdl232x0_user_info_data
+                               WHERE        (userid = u.id) AND (fieldid = 3)) AS namsinh,
+                             (SELECT        data
+                               FROM            dbo.mdl232x0_user_info_data
+                               WHERE        (userid = u.id) AND (fieldid = 4)) AS gioitinh, u.phone1 AS sodienthoai, u.username AS CMTND,
+                             (SELECT        data
+                               FROM            dbo.mdl232x0_user_info_data
+                               WHERE        (userid = u.id) AND (fieldid = 6)) AS ngaycap,
+                             (SELECT        data
+                               FROM            dbo.mdl232x0_user_info_data
+                               WHERE        (userid = u.id) AND (fieldid = 7)) AS noicap, c.idnumber AS malop, CASE WHEN qa.sumgrades > 0 THEN qa.sumgrades ELSE 0 END AS [Điểm số A], 
+                         CASE WHEN
+                             (SELECT        gradepass
+                               FROM            mdl232x0_grade_items
+                               WHERE        iteminstance = 305 AND courseid = 47) <= qa.sumgrades THEN N'Đạt' ELSE N'Không đạt' END AS [Kết quả A], 
+                         CASE WHEN qa1.sumgrades > 0 THEN qa1.sumgrades ELSE 0 END AS [Điểm số B], CASE WHEN
+                             (SELECT        gradepass
+                               FROM            mdl232x0_grade_items
+                               WHERE        iteminstance = 335 AND courseid = 47) <= qa1.sumgrades THEN N'Đạt' ELSE N'Không đạt' END AS [Kết quả B]
+FROM            dbo.mdl232x0_cohort_members AS cm INNER JOIN
+                         dbo.mdl232x0_user AS u ON u.id = cm.userid INNER JOIN
+                         dbo.mdl232x0_cohort AS c ON c.id = cm.cohortid LEFT OUTER JOIN
+                             (SELECT        userid, MAX(sumgrades) AS sumgrades
+                               FROM            dbo.mdl232x0_quiz_attempts
+                               WHERE        (quiz = 305)
+                               GROUP BY userid) AS q ON q.userid = u.id LEFT OUTER JOIN
+                         dbo.mdl232x0_quiz_attempts AS qa ON qa.sumgrades = q.sumgrades AND q.userid = qa.userid AND qa.quiz = 305 LEFT OUTER JOIN
+                             (SELECT        userid, MAX(sumgrades) AS sumgrades
+                               FROM            dbo.mdl232x0_quiz_attempts
+                               WHERE        (quiz = 335)
+                               GROUP BY userid) AS q1 ON q1.userid = u.id LEFT OUTER JOIN
+                         dbo.mdl232x0_quiz_attempts AS qa1 ON qa1.sumgrades = q1.sumgrades AND q1.userid = qa1.userid AND qa1.quiz = 335
+WHERE        (c.name = '0432')
