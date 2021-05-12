@@ -522,8 +522,8 @@ if (!$csv) {
     // The CSV headers
     $row = array();
 
-    $row[] = get_string('id', 'report_completion');
-    $row[] = get_string('name', 'report_completion');
+    $row[] = "id";
+    $row[] = "fullname";
     foreach ($extrafields as $field) {
        ;//$row[] = get_user_field_name($field);Email
     }
@@ -545,35 +545,27 @@ if (!$csv) {
             //$row[] = strip_tags($criterion->get_title_detailed());
         }
     }
-	$row[] = "CMTND";
-    $row[] = "Số Điện Thoại";
-    $row[] = "Lớp";
-    $row[] = "Trạng thái";    
-    $row[] = "Kết quả";
+	$row[] = "ngaysinh";
+    $row[] = "thangsinh";
+    $row[] = "namsinh";
+    $row[] = "gioitinh";    
+    $row[] = "sodienthoai";
     if($isMOF)
     {       
-        $row[] = "Điểm thi Cơ bản";
-        $row[] = "Điểm thi PHDP"; 
-        $row[] = "Ngày hoàn thành"; 
-        $row[] = "Xem xét";
-        $row[] = "Ghi chú";
+        $row[] = "cmtnd";
+        $row[] = "ngaycap"; 
+        $row[] = "noicap"; 
+        $row[] = "malop";
+        $row[] = "Điểm số A";
     }
     else{
         
         $row[] = "Điểm kiểm tra";
         $row[] = "Ngày";
     }
-    $row[] = "AD";
-    $row[] = "Văn Phòng";
-    $row[] = "Mã Đại Lý";
-    $row[] = "Tên Đại Lý";
-    $row[] = "Mã Supervisor";
-    $row[] = "Tên Supervisor";
-    $row[] = "Mã Parent Supervisor";
-    $row[] = "Tên Parent Supervisor";
-    $row[] = "Tên Khu Vực";
-    $row[] = "Đơn Vị";
-    $row[] = "Ngày Tham Dự";
+    $row[] = "Kết quả A";
+    $row[] = "Điểm số B";
+    $row[] = "Kết quả B";
     //$row[] = get_string('coursecomplete', 'completion');
 
     $export->add_data($row);
@@ -805,29 +797,31 @@ foreach ($progress as $user) {
 	else
 	{
 		$newUser=GetUserProfileField($user->id);
-		$row[] = "'".$newUser->profile['cmtnd'];
+		$row[] ="";
 		$row[] = $newUser->phone1;
 		if($isMOF)
 		{
-			$row[]=$cohort;
-			$row[]=$status;
-			$row[]=$result;
-			$row[]=$CFG->mofexams[$course->id][0]." grade is ".$basicMark;
-			$row[]=$CFG->mofexams[$course->id][1]." grade is ".$finalMark;
+			$row[]="";
+			$row[]="";
+			$row[]="";
+			$row[]= "'".$newUser->profile['cmtnd'];
+
+			$row[]="";
 			$row[]=$newSubmitDate;//Date_format($newSubmitDate, "m/d/Y h:m:i");
-			$row[]=$app==1?"Yes":"";
-			$row[]=$get_grade->gradepass." + ".$CFG->mofexams[$course->id][0]." + ".$CFG->mofexams[$course->id][1];
+			$row[]=$cohort;
+			$row[]=$basicMark;
 		}
 		else
 		{			
 						
 			$row[]=$cohort;
-			$row[]=$status;
+			$row[]= $newUser->phone1;
+
 			$row[]=$result;
 			$row[]=$basicMark;
 			$row[]=$newSubmitDate;//Date_format($newSubmitDate, "m/d/Y h:m:i");
 		}
-        $row[] = $newUser->profile['DA'];
+        $row[] = $result;
         $row[] = $newUser->profile['vanphong'];      
 
 
@@ -835,14 +829,14 @@ foreach ($progress as $user) {
 
         if(isset($agentInfo))
         {
-            $row[] = $agentInfo->agent_number;
-            $row[] = $agentInfo->agent_name;
-            $row[] = $agentInfo->supervisor_code;
-            $row[] = $agentInfo->supervisor_name;
-            $row[] = $agentInfo->parent_supervisor_code;
-            $row[] = $agentInfo->parent_supervisor_name;
-            $row[] = $agentInfo->area_name;
-            $row[] = $agentInfo->sales_unit;
+            $row[] = "";
+            $row[] = "";
+            $row[] = "";
+            $row[] = "";
+            $row[] = "";
+            $row[] = "";
+            $row[] = "";
+            $row[] = "";
         }
         else
         {
